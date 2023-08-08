@@ -1,5 +1,6 @@
 package com.green.jpaexam.product.model;
 
+import com.green.jpaexam.config.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -14,7 +15,7 @@ import java.time.LocalDateTime;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class ProductEntity {
+public class ProductEntity extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long number;
@@ -28,11 +29,12 @@ public class ProductEntity {
     @Column(nullable = false)
     private Integer stock;
 
-    @CreationTimestamp
-    private LocalDateTime createAt;
-
-    @UpdateTimestamp
-    private LocalDateTime updateAt;
+// BaseEntity 상속 받음
+//    @CreationTimestamp
+//    private LocalDateTime createAt;
+//
+//    @UpdateTimestamp
+//    private LocalDateTime updateAt;
 
 
 

@@ -3,6 +3,9 @@ package com.green.jpaexam.product;
 import com.green.jpaexam.product.model.ProductEntity;
 import com.green.jpaexam.product.model.ProductRes;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
 
@@ -27,17 +30,27 @@ public class ProductDaoImpl implements ProductDao {
     }
 
     @Override
-    public List<ProductRes> getProductAll() {
+    public Page<ProductRes> getProductAll(Pageable page) {
 
-        List<ProductEntity> list = rep.findAll(Sort.by(Sort.Direction.DESC,"number"));
+        Page<ProductEntity> totalList = rep.findAll(page);
+        long totalElements = totalList.getTotalElements();
 
-        List<ProductRes> result = list.stream().map(itme -> ProductRes.builder()
-                .number(itme.getNumber())
-                .name(itme.getName())
-                .price(itme.getPrice())
-                .stock(itme.getStock())
-                .build()).toList();
-        return result;
+        List<ProductRes> list = totalList.getContent().stream().map(item ->
+                                        ProductRes.builder()
+                                        .number(item.getNumber())
+                                        .name(item.getName())
+                                        .price(item.getPrice())
+                                        .stock(item.getStock())
+                                        .build()).toList();
+
+//        List<ProductRes> result = list.stream().map(itme -> ProductRes.builder()
+//                .number(itme.getNumber())
+//                .name(itme.getName())
+//                .price(itme.getPrice())
+//                .stock(itme.getStock())
+//                .build()).toList();
+
+        return new PageImpl<>(list,page,totalElements);
 
     }
 
